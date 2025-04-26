@@ -10,7 +10,7 @@ app.secret_key = '1234'  # Needed for session handling
 DB_CONFIG = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'ASt14@20',
+    'password': 'your_password',
     'database': 'restaurant_management'
 }
 
