@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beverages Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url("images/3.png");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .menu-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .menu-details {
+            flex: 1;
+            margin-left: 15px;
+        }
+        .menu-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .menu-price {
+            color: green;
+            font-weight: bold;
+        }
+        .add-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-btn:hover {
+            background-color: #218838;
+        }
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 88px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .quantity-btn {
+            background-color: #28a745;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quantity-btn:hover {
+            background-color: #218838;
+        }
+        .quantity {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .back-btn, .cart-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 150px;
+            white-space: nowrap;
+        }
+        .back-btn:hover, .cart-btn:hover {
+            background-color: #218838;
+        }
+        .cart-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .cart-badge.show {
+            opacity: 1;
+        }
+        #notification {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        #notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;">Beverages Menu</h1>
+    <div class="menu-container">
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Coffee</div>
+                <div class="menu-price">₹30</div>
+                <p>Aromatic and freshly brewed coffee to energize your day.</p>  
+            </div>
+            <div class="button-container" id="button-container-1">
+                <button class="add-btn" onclick="addToCart(1,'Coffee',30)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Black coffee</div>
+                <div class="menu-price">₹60</div>
+                <p>Strong and bold black coffee for coffee lovers.</p>  
+            </div>
+            <div class="button-container" id="button-container-2">
+                <button class="add-btn" onclick="addToCart(2,'Black coffee',60)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Cappuccino</div>
+                <div class="menu-price">₹90</div>
+                <p>Rich and foamy cappuccino for a perfect coffee experience.</p>  
+            </div>
+            <div class="button-container" id="button-container-3">
+                <button class="add-btn" onclick="addToCart(3,'Cappuccino',90)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Tea</div>
+                <div class="menu-price">₹30</div>
+                <p>Classic tea with a refreshing and soothing taste.</p>  
+            </div>
+            <div class="button-container" id="button-container-4">
+                <button class="add-btn" onclick="addToCart(4,'Tea',30)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Green Tea</div>
+                <div class="menu-price">₹35</div>
+                <p>Healthy and calming green tea for a refreshing feel.</p>  
+            </div>
+            <div class="button-container" id="button-container-5">
+                <button class="add-btn" onclick="addToCart(5,'Green Tea',35)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Iced tea</div>
+                <div class="menu-price">₹60</div>
+                <p>Cool and refreshing iced tea with a hint of lemon.</p>  
+            </div>
+            <div class="button-container" id="button-container-6">
+                <button class="add-btn" onclick="addToCart(6,'Iced tea',60)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Lemonade</div>
+                <div class="menu-price">₹50</div>
+                <p>Zesty lemonade, perfect for a refreshing experience.</p>  
+            </div>
+            <div class="button-container" id="button-container-7">
+                <button class="add-btn" onclick="addToCart(7,'Lemonade',50)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Orange Juice</div>
+                <div class="menu-price">₹80</div>
+                <p>Freshly squeezed orange juice, rich in vitamin C.</p>  
+            </div>
+            <div class="button-container" id="button-container-8">
+                <button class="add-btn" onclick="addToCart(8,'Orange Juice',80)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Sugarcane juice</div>
+                <div class="menu-price">₹60</div>
+                <p>Natural sugarcane juice, sweet and refreshing.</p>  
+            </div>
+            <div class="button-container" id="button-container-9">
+                <button class="add-btn" onclick="addToCart(9,'Sugarcane juice',60)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Berry Juice</div>
+                <div class="menu-price">₹60</div>
+                <p>Fresh mixed berry juice, packed with antioxidants.</p>  
+            </div>
+            <div class="button-container" id="button-container-10">
+                <button class="add-btn" onclick="addToCart(10,'Berry Juice',60)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Pineapple Juice</div>
+                <div class="menu-price">₹80</div>
+                <p>Sweet and tangy pineapple juice, full of tropical flavors.</p>  
+            </div>
+            <div class="button-container" id="button-container-11">
+                <button class="add-btn" onclick="addToCart(11,'Pineapple Juice',80)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Pomegranate shake</div>
+                <div class="menu-price">₹100</div>
+                <p>Healthy and tasty pomegranate shake with a refreshing kick.</p>  
+            </div>
+            <div class="button-container" id="button-container-12">
+                <button class="add-btn" onclick="addToCart(12,'Pomegranate shake',100)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Grape juice</div>
+                <div class="menu-price">₹80</div>
+                <p>Sweet and tangy grape juice, full of natural goodness.</p>  
+            </div>
+            <div class="button-container" id="button-container-13">
+                <button class="add-btn" onclick="addToCart(13,'Grape juice',80)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Watermelon Juice</div>
+                <div class="menu-price">₹80</div>
+                <p>Refreshing watermelon juice, perfect for summer days.</p>  
+            </div>
+            <div class="button-container" id="button-container-14">
+                <button class="add-btn" onclick="addToCart(14,'Watermelon Juice',80)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Hot Chocolate</div>
+                <div class="menu-price">₹130</div>
+                <p>Rich and creamy hot chocolate to warm your soul.</p>  
+            </div>
+            <div class="button-container" id="button-container-15">
+                <button class="add-btn" onclick="addToCart(15,'Hot Chocolate',130)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Hazelnut hot chocolate</div>
+                <div class="menu-price">₹150</div>
+                <p>Creamy hazelnut-infused hot chocolate for a delightful treat.</p>  
+            </div>
+            <div class="button-container" id="button-container-16">
+                <button class="add-btn" onclick="addToCart(16,'Hazelnut hot chocolate',150)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Iced Coffee</div>
+                <div class="menu-price">₹60</div>
+                <p>Chilled iced coffee to cool you down on a hot day.</p>  
+            </div>
+            <div class="button-container" id="button-container-17">
+                <button class="add-btn" onclick="addToCart(17,'Iced Coffee',60)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Caramel cold coffee</div>
+                <div class="menu-price">₹180</div>
+                <p>Sweet caramel cold coffee for a rich, smooth taste.</p>  
+            </div>
+            <div class="button-container" id="button-container-18">
+                <button class="add-btn" onclick="addToCart(18,'Caramel cold coffee',180)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Lotus biscoff coffee</div>
+                <div class="menu-price">₹165</div>
+                <p>Indulgent Lotus Biscoff coffee with a caramelized twist.</p>  
+            </div>
+            <div class="button-container" id="button-container-19">
+                <button class="add-btn" onclick="addToCart(19,'Lotus biscoff coffee',165)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Oreo milkshake</div>
+                <div class="menu-price">₹180</div>
+                <p>Thick and creamy Oreo milkshake with a chocolatey crunch.</p>  
+            </div>
+            <div class="button-container" id="button-container-20">
+                <button class="add-btn" onclick="addToCart(20,'Oreo milkshake',180)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Chocolate Devil Shake</div>
+                <div class="menu-price">₹175</div>
+                <p>Decadent chocolate shake for an indulgent experience.</p>  
+            </div>
+            <div class="button-container" id="button-container-21">
+                <button class="add-btn" onclick="addToCart(21,'Chocolate Devil Shake',175)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Brownie Milkshake</div>
+                <div class="menu-price">₹170</div>
+                <p>Delicious brownie-infused milkshake for chocolate lovers.</p>  
+            </div>
+            <div class="button-container" id="button-container-22">
+                <button class="add-btn" onclick="addToCart(22,'Brownie Milkshake',170)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Mango Lassi</div>
+                <div class="menu-price">₹90</div>
+                <p>Thick and creamy mango lassi with a traditional touch.</p>  
+            </div>
+            <div class="button-container" id="button-container-23">
+                <button class="add-btn" onclick="addToCart(23,'Mango Lassi',90)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Mango smoothie</div>
+                <div class="menu-price">₹85</div>
+                <p>Delicious mango smoothie with a creamy texture.</p>  
+            </div>
+            <div class="button-container" id="button-container-24">
+                <button class="add-btn" onclick="addToCart(24,'Mango smoothie',85)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Strawberry Smoothie</div>
+                <div class="menu-price">₹85</div>
+                <p>Creamy strawberry smoothie with a fruity burst.</p>  
+            </div>
+            <div class="button-container" id="button-container-25">
+                <button class="add-btn" onclick="addToCart(25,'Strawberry Smoothie',85)">Add</button>
+            </div>
+        </div>
+        <div class="button-group">
+            <a href="/menu">
+                <button class="back-btn">Back</button>
+            </a>
+            <a href="/cart">
+                <button class="cart-btn">Go to Cart</button>
+            </a>
+        </div>
+    </div>
+    
+    
+
+    <script>
+        // Load cart from localStorage
+      let cart = JSON.parse(localStorage.getItem('cart')) || {};
+      
+      // Function to add item to cart
+      function addToCart(itemId, itemName, itemPrice) {
+          // Get existing cart or initialize empty object
+          let cart = JSON.parse(localStorage.getItem('cart')) || {};
+          
+          if (!cart[itemId]) {
+              cart[itemId] = { name: itemName, price: itemPrice, quantity: 1 };
+          } else {
+              cart[itemId].quantity++;
+          }
+          
+          // Save to localStorage
+          localStorage.setItem('cart', JSON.stringify(cart));
+          
+          // Update button UI after adding item
+          updateButtonUI(itemId, itemName, itemPrice);
+          
+          // Update cart badge
+          updateCartBadge();
+          
+          // Show notification
+          showNotification(itemName);
+      }
+      
+      // Function to update the button UI
+      function updateButtonUI(itemId, itemName, itemPrice) {
+          const buttonContainer = document.getElementById(`button-container-${itemId}`);
+          
+          if (!buttonContainer) {
+              console.error(`Button container for item ${itemId} not found!`);
+              return;
+          }
+          
+          const quantity = cart[itemId]?.quantity || 0;
+          
+          if (quantity > 0) {
+              buttonContainer.innerHTML = `
+                  <div class="quantity-selector">
+                      <button class="quantity-btn" onclick="decreaseQuantity('${itemId}', '${itemName}', ${itemPrice})">-</button>
+                      <span class="quantity" id="quantity-${itemId}">${quantity}</span>
+                      <button class="quantity-btn" onclick="increaseQuantity('${itemId}', '${itemName}', ${itemPrice})">+</button>
+                  </div>
+              `;
+          } else {
+              buttonContainer.innerHTML = `
+                  <button class="add-btn" onclick="addToCart('${itemId}', '${itemName}', ${itemPrice})">Add</button>
+              `;
+          }
+      }
+      
+      // Function to increase quantity
+      function increaseQuantity(itemId, itemName, itemPrice) {
+          // Get existing cart or initialize empty object
+          let cart = JSON.parse(localStorage.getItem('cart')) || {};
+          
+          if (cart[itemId]) {
+              cart[itemId].quantity++;
+              const quantityElement = document.getElementById(`quantity-${itemId}`);
+              if (quantityElement) {
+                  quantityElement.innerText = cart[itemId].quantity;
+              }
+              
+              // Save to localStorage
+              localStorage.setItem('cart', JSON.stringify(cart));
+              
+              // Update cart badge
+              updateCartBadge();
+              
+              // Show notification
+              showNotification(itemName);
+          }
+      }
+      
+      // Function to decrease quantity
+      function decreaseQuantity(itemId, itemName, itemPrice) {
+          // Get existing cart or initialize empty object
+          let cart = JSON.parse(localStorage.getItem('cart')) || {};
+          
+          if (cart[itemId]) {
+              cart[itemId].quantity--;
+              
+              if (cart[itemId].quantity <= 0) {
+                  delete cart[itemId]; // Remove item if quantity is 0
+                  
+                  // Reset the button to ADD
+                  const buttonContainer = document.getElementById(`button-container-${itemId}`);
+                  if (buttonContainer) {
+                      buttonContainer.innerHTML = `
+                          <button class="add-btn" onclick="addToCart('${itemId}', '${itemName}', ${itemPrice})">Add</button>
+                      `;
+                  }
+              } else {
+                  const quantityElement = document.getElementById(`quantity-${itemId}`);
+                  if (quantityElement) {
+                      quantityElement.innerText = cart[itemId].quantity;
+                  }
+              }
+              
+              // Save to localStorage
+              localStorage.setItem('cart', JSON.stringify(cart));
+              
+              // Update cart badge
+              updateCartBadge();
+          }
+      }
+      
+      // Function to update cart badge
+      function updateCartBadge() {
+          const cartBadge = document.getElementById('cart-badge');
+          if (!cartBadge) return;
+          
+          // Get existing cart or initialize empty object
+          let cart = JSON.parse(localStorage.getItem('cart')) || {};
+          
+          // Count total items in cart
+          let totalItems = 0;
+          for (const itemId in cart) {
+              totalItems += cart[itemId].quantity;
+          }
+          
+          // Update badge
+          cartBadge.textContent = totalItems;
+          
+          if (totalItems > 0) {
+              cartBadge.classList.add('show');
+          } else {
+              cartBadge.classList.remove('show');
+          }
+      }
+      
+      // Function to show notification
+      function showNotification(itemName) {
+          let notification = document.getElementById('notification');
+          
+          // Create notification element if it doesn't exist
+          if (!notification) {
+              notification = document.createElement('div');
+              notification.id = 'notification';
+              notification.className = 'notification';
+              document.body.appendChild(notification);
+          }
+          
+          notification.textContent = `${itemName} added to cart!`;
+          notification.classList.add('show');
+          
+          // Hide notification after 2 seconds
+          setTimeout(() => {
+              notification.classList.remove('show');
+          }, 2000);
+      }
+      
+      // Initialize UI when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+          // Get existing cart or initialize empty object
+          cart = JSON.parse(localStorage.getItem('cart')) || {};
+          
+          // Update UI for each product on the current page
+          const buttonContainers = document.querySelectorAll('[id^="button-container-"]');
+          
+          buttonContainers.forEach(container => {
+              const itemId = container.id.replace('button-container-', '');
+              
+              // Get item details from data attributes
+              const productElement = container.closest('.product-item') || container.closest('.menu-item') || container.closest('[data-item-name][data-item-price]');
+              
+              if (productElement) {
+                  const itemName = productElement.getAttribute('data-item-name');
+                  const itemPrice = parseFloat(productElement.getAttribute('data-item-price'));
+                  
+                  if (itemName && !isNaN(itemPrice)) {
+                      // Update UI based on cart state
+                      updateButtonUI(itemId, itemName, itemPrice);
+                  }
+              }
+          });
+          
+          // Update cart badge
+          updateCartBadge();
+      });
+      
+      // Function to sync cart across tabs/windows
+      window.addEventListener('storage', function(e) {
+          if (e.key === 'cart') {
+              cart = JSON.parse(e.newValue || '{}');
+              
+              // Update UI for each product on the current page
+              const buttonContainers = document.querySelectorAll('[id^="button-container-"]');
+              
+              buttonContainers.forEach(container => {
+                  const itemId = container.id.replace('button-container-', '');
+                  
+                  // Get item details
+                  const productElement = container.closest('.product-item') || container.closest('.menu-item') || container.closest('[data-item-name][data-item-price]');
+                  
+                  if (productElement) {
+                      const itemName = productElement.getAttribute('data-item-name');
+                      const itemPrice = parseFloat(productElement.getAttribute('data-item-price'));
+                      
+                      if (itemName && !isNaN(itemPrice)) {
+                          // Update UI based on cart state
+                          updateButtonUI(itemId, itemName, itemPrice);
+                      }
+                  }
+              });
+              
+              // Update cart badge
+              updateCartBadge();
+          }
+      });
+              </script>
+</body>
+</html>

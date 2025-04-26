@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .confirmation-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        .order-id span {
+            color: #ff6600;
+            font-weight: bold;
+        }
+
+        .order-details {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        .customer-details {
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            display: inline-block;
+            width: 80px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo img {
+            height: 80px;
+            width: auto;
+        }
+
+        #order-summary {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-container">
+        <div class="logo">
+            <img src="../static/images/chai_osa.png" alt="Restaurant Logo" />
+        </div>
+        
+        <h1>Order successful!</h1>
+        <p>Your order has been received and is being processed.</p>
+        
+        <div class="order-id">
+            Order ID: <span id="order-id">{{ order_id }}</span>
+        </div>
+        
+        <div class="order-details">
+            <div class="section-title">Delivery Information</div>
+            <div class="customer-details">
+                <div class="detail-item">
+                    <span class="detail-label">Name:</span>
+                    <span>{{ customer.get('name', 'N/A') }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Address:</span>
+                    <span>{{ customer.get('address', 'N/A') }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Phone:</span>
+                    <span>{{ customer.get('phone_no', 'N/A') }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Email:</span>
+                    <span>{{ customer.get('email', 'N/A') }}</span>
+                </div>
+            </div>
+                
+            <div class="section-title">Order Status</div>
+            <p>Your order has been received and is being processed</p>
+            <p>Estimated delivery time: {{ '20-30 minutes' if customer.get('delivery_option') == 'express' else '40-50 minutes' }}</p>
+        </div>
+        
+        <div class="order-details" id="order-summary">
+            <!-- Order summary will be shown here if available -->
+        </div>
+        
+        <a href="/index" class="btn">Return to Home</a>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get order ID from URL or from the template
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId') || document.getElementById('order-id').innerText;
+            
+            // Set order ID in the page
+            document.getElementById('order-id').innerText = orderId;
+            
+            // Get the last order details if available
+            const lastOrderData = localStorage.getItem('last_order_data');
+            const orderSummary = document.getElementById('order-summary');
+            
+            if (lastOrderData) {
+                const orderData = JSON.parse(lastOrderData);
+                orderSummary.innerHTML = `
+                    <div class="section-title">Order Summary</div>
+                    <div class="detail-item">
+                        <span class="detail-label">Total:</span>
+                        <span>₹${orderData.total_amount}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Delivery:</span>
+                        <span>${orderData.delivery_option === 'express' ? 'Express Delivery' : 'Standard Delivery'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Payment:</span>
+                        <span>${orderData.payment_method.charAt(0).toUpperCase() + orderData.payment_method.slice(1)}</span>
+                    </div>
+                `;
+            } else {
+                orderSummary.style.display = 'none';
+            }
+            
+            // Clear the cart data now that we're on the confirmation page
+            localStorage.removeItem('cart');
+            
+            // Optional: Store this order in order history
+            const orderHistory = JSON.parse(localStorage.getItem('order_history') || '[]');
+            orderHistory.push({
+                orderId: orderId,
+                date: new Date().toISOString(),
+                total: lastOrderData ? JSON.parse(lastOrderData).total_amount : 'N/A'
+            });
+            localStorage.setItem('order_history', JSON.stringify(orderHistory));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snacks Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url("images/3.png");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .menu-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .menu-details {
+            flex: 1;
+            margin-left: 15px;
+        }
+        .menu-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .menu-price {
+            color: green;
+            font-weight: bold;
+        }
+        .add-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-btn:hover {
+            background-color: #218838;
+        }
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 88px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .quantity-btn {
+            background-color: #28a745;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quantity-btn:hover {
+            background-color: #218838;
+        }
+        .quantity {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .back-btn, .cart-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 150px;
+            white-space: nowrap;
+        }
+        .back-btn:hover, .cart-btn:hover {
+            background-color: #218838;
+        }
+        .cart-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .cart-badge.show {
+            opacity: 1;
+        }
+        #notification {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        #notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;">Snacks Menu</h1>
+    
+    <div class="cart-badge" id="cart-badge">0</div>
+    
+    <div id="notification">Item added to cart!</div>
+    
+    <div class="menu-container">
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Samosa</div>
+                <div class="menu-price">₹30</div>
+                <p>Crispy pastry filled with spiced potatoes and peas</p>  
+            </div>
+            <div id="button-container-1">
+                <button class="add-btn" onclick="addToCart(1,'Samosa',30)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Kachori</div>
+                <div class="menu-price">₹40</div>
+                <p>Flaky, deep-fried snack with a spiced lentil or potato filling</p>  
+            </div>
+            <div id="button-container-2">
+                <button class="add-btn" onclick="addToCart(2,'Kachori',40)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Pani Puri</div>
+                <div class="menu-price">₹35</div>
+                <p>Crunchy puris filled with tangy water, potatoes, and chickpeas</p>  
+            </div>
+            <div id="button-container-3">
+                <button class="add-btn" onclick="addToCart(3,'Pani Puri',35)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Veg Puff</div>
+                <div class="menu-price">₹20</div>
+                <p>Flaky pastry stuffed with spiced vegetables</p>  
+            </div>
+            <div id="button-container-4">
+                <button class="add-btn" onclick="addToCart(4,'Veg Puff',20)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Egg Puff</div>
+                <div class="menu-price">₹30</div>
+                <p>Crispy puff pastry with a seasoned egg filling</p>  
+            </div>
+            <div id="button-container-5">
+                <button class="add-btn" onclick="addToCart(5,'Egg Puff',30)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Cutlet</div>
+                <div class="menu-price">₹35</div>
+                <p>Golden-fried potato and veggie patty</p>  
+            </div>
+            <div id="button-container-6">
+                <button class="add-btn" onclick="addToCart(6,'Cutlet',35)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">French Fries</div>
+                <div class="menu-price">₹60</div>
+                <p>Classic golden-fried potato sticks</p>  
+            </div>
+            <div id="button-container-7">
+                <button class="add-btn" onclick="addToCart(7,'French Fries',60)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Peri Peri Fries</div>
+                <div class="menu-price">₹85</div>
+                <p>Crispy fries tossed in spicy peri peri seasoning</p>  
+            </div>
+            <div id="button-container-8">
+                <button class="add-btn" onclick="addToCart(8,'Peri Peri Fries',85)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Chicken Loaded Fries</div>
+                <div class="menu-price">₹175</div>
+                <p>Fries topped with juicy chicken, cheese, and sauces</p>  
+            </div>
+            <div id="button-container-9">
+                <button class="add-btn" onclick="addToCart(9,'Chicken Loaded Fries',175)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Vada Pav</div>
+                <div class="menu-price">₹50</div>
+                <p>Spicy potato fritter in a soft bun with chutneys</p>  
+            </div>
+            <div id="button-container-10">
+                <button class="add-btn" onclick="addToCart(10,'Vada Pav',50)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Bhel Puri</div>
+                <div class="menu-price">₹50</div>
+                <p>A tangy and crunchy mix of puffed rice, sev, chopped veggies, and chutneys</p>  
+            </div>
+            <div id="button-container-11">
+                <button class="add-btn" onclick="addToCart(11,'Bhel Puri',50)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Veg Sandwich</div>
+                <div class="menu-price">₹75</div>
+                <p>Fresh veggies layered with spices and sauces between toasted or grilled bread</p>  
+            </div>
+            <div id="button-container-12">
+                <button class="add-btn" onclick="addToCart(12,'Veg Sandwich',75)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Pav Bhaji</div>
+                <div class="menu-price">₹95</div>
+                <p>Spiced mashed vegetables served with buttered pav</p>  
+            </div>
+            <div id="button-container-13">
+                <button class="add-btn" onclick="addToCart(13,'Pav Bhaji',95)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Paneer Roll</div>
+                <div class="menu-price">₹100</div>
+                <p>Grilled paneer wrap with veggies and sauces</p>  
+            </div>
+            <div id="button-container-14">
+                <button class="add-btn" onclick="addToCart(14,'Paneer Roll',100)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Sabudana Vada</div>
+                <div class="menu-price">₹65</div>
+                <p>Crunchy tapioca fritters with peanuts and spices</p>  
+            </div>
+            <div id="button-container-15">
+                <button class="add-btn" onclick="addToCart(15,'Sabudana Vada',65)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Corn Cheese Balls</div>
+                <div class="menu-price">₹80</div>
+                <p>Crispy bites filled with melted cheese and corn</p>  
+            </div>
+            <div id="button-container-16">
+                <button class="add-btn" onclick="addToCart(16,'Corn Cheese Balls',80)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Potato Nuggets</div>
+                <div class="menu-price">₹80</div>
+                <p>Golden nuggets made from seasoned potatoes</p>  
+            </div>
+            <div id="button-container-17">
+                <button class="add-btn" onclick="addToCart(17,'Potato Nuggets',80)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Paneer Momos</div>
+                <div class="menu-price">₹120</div>
+                <p>Steamed or fried dumplings stuffed with spiced paneer</p>  
+            </div>
+            <div id="button-container-18">
+                <button class="add-btn" onclick="addToCart(18,'Paneer Momos',120)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Cheese Nachos</div>
+                <div class="menu-price">₹110</div>
+                <p>Crunchy nachos topped with melted cheese</p>  
+            </div>
+            <div id="button-container-19">
+                <button class="add-btn" onclick="addToCart(19,'Cheese Nachos',110)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Spring Roll</div>
+                <div class="menu-price">₹199</div>
+                <p>Crispy fried rolls with a savory veggie filling</p>  
+            </div>
+            <div id="button-container-20">
+                <button class="add-btn" onclick="addToCart(20,'Spring Roll',199)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Chocolate Donut</div>
+                <div class="menu-price">₹55</div>
+                <p>Soft donut with rich chocolate glaze</p>  
+            </div>
+            <div id="button-container-21">
+                <button class="add-btn" onclick="addToCart(21,'Chocolate Donut',55)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Brownie with Ice Cream</div>
+                <div class="menu-price">₹140</div>
+                <p>Warm brownie served with vanilla ice cream</p>  
+            </div>
+            <div id="button-container-22">
+                <button class="add-btn" onclick="addToCart(22,'Brownie with Ice Cream',140)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Chocolate Tart</div>
+                <div class="menu-price">₹135</div>
+                <p>Decadent chocolate-filled tart</p>  
+            </div>
+            <div id="button-container-23">
+                <button class="add-btn" onclick="addToCart(23,'Chocolate Tart',135)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Triple Chocolate Cupcake</div>
+                <div class="menu-price">₹85</div>
+                <p>Moist chocolate cupcake with choco chips</p>  
+            </div>
+            <div id="button-container-24">
+                <button class="add-btn" onclick="addToCart(24,'Triple Chocolate Cupcake',85)">Add</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-details">
+                <div class="menu-title">Belgian Waffle</div>
+                <div class="menu-price">₹149</div>
+                <p>Crispy waffles with syrup, chocolate, or cream</p>  
+            </div>
+            <div id="button-container-25">
+                <button class="add-btn" onclick="addToCart(25,'Belgian Waffle',149)">Add</button>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <a href="/menu">
+                <button class="back-btn">Back</button>
+            </a>
+            <a href="/cart">
+                <button class="cart-btn">Go to Cart</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Load cart from localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+        // Function to add item to cart
+        function addToCart(itemId, itemName, itemPrice) {
+            // Get existing cart or initialize empty object
+            let cart = JSON.parse(localStorage.getItem('cart')) || {};
+            
+            if (!cart[itemId]) {
+                cart[itemId] = { name: itemName, price: itemPrice, quantity: 1 };
+            } else {
+                cart[itemId].quantity++;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update button UI after adding item
+            updateButtonUI(itemId, itemName, itemPrice);
+            
+            // Update cart badge
+            updateCartBadge();
+            
+            // Show notification
+            showNotification(itemName);
+        }
+
+        // Function to update the button UI
+        function updateButtonUI(itemId, itemName, itemPrice) {
+            const buttonContainer = document.getElementById(`button-container-${itemId}`);
+            
+            if (!buttonContainer) {
+                console.error(`Button container for item ${itemId} not found!`);
+                return;
+            }
+            
+            const quantity = cart[itemId]?.quantity || 0;
+            
+            if (quantity > 0) {
+                buttonContainer.innerHTML = `
+                    <div class="quantity-selector">
+                        <button class="quantity-btn" onclick="decreaseQuantity(${itemId}, '${itemName}', ${itemPrice})">-</button>
+                        <span class="quantity" id="quantity-${itemId}">${quantity}</span>
+                        <button class="quantity-btn" onclick="increaseQuantity(${itemId}, '${itemName}', ${itemPrice})">+</button>
+                    </div>
+                `;
+            } else {
+                buttonContainer.innerHTML = `
+                    <button class="add-btn" onclick="addToCart(${itemId}, '${itemName}', ${itemPrice})">Add</button>
+                `;
+            }
+        }
+
+        // Function to increase quantity
+        function increaseQuantity(itemId, itemName, itemPrice) {
+            // Get existing cart or initialize empty object
+            let cart = JSON.parse(localStorage.getItem('cart')) || {};
+            
+            if (cart[itemId]) {
+                cart[itemId].quantity++;
+                document.getElementById(`quantity-${itemId}`).innerText = cart[itemId].quantity;
+                
+                // Save to localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // Update cart badge
+                updateCartBadge();
+                
+                // Show notification
+                showNotification(itemName);
+            }
+        }
+
+        // Function to decrease quantity
+        function decreaseQuantity(itemId, itemName, itemPrice) {
+            // Get existing cart or initialize empty object
+            let cart = JSON.parse(localStorage.getItem('cart')) || {};
+            
+            if (cart[itemId]) {
+                cart[itemId].quantity--;
+                
+                if (cart[itemId].quantity <= 0) {
+                    delete cart[itemId]; // Remove item if quantity is 0
+                    
+                    // Reset the button to ADD
+                    const buttonContainer = document.getElementById(`button-container-${itemId}`);
+                    if (buttonContainer) {
+                        buttonContainer.innerHTML = `
+                            <button class="add-btn" onclick="addToCart(${itemId}, '${itemName}', ${itemPrice})">Add</button>
+                        `;
+                    }
+                } else {
+                    document.getElementById(`quantity-${itemId}`).innerText = cart[itemId].quantity;
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // Update cart badge
+                updateCartBadge();
+            }
+        }
+
+        // Function to update cart badge
+        function updateCartBadge() {
+            const cartBadge = document.getElementById('cart-badge');
+            
+            // Get existing cart or initialize empty object
+            let cart = JSON.parse(localStorage.getItem('cart')) || {};
+            
+            // Count total items in cart
+            let totalItems = 0;
+            for (const itemId in cart) {
+                totalItems += cart[itemId].quantity;
+            }
+            
+            // Update badge
+            cartBadge.textContent = totalItems;
+            
+            if (totalItems > 0) {
+                cartBadge.classList.add('show');
+            } else {
+                cartBadge.classList.remove('show');
+            }
+        }
+
+        // Function to show notification
+        function showNotification(itemName) {
+            const notification = document.getElementById('notification');
+            notification.textContent = `${itemName} added to cart!`;
+            notification.classList.add('show');
+            
+            // Hide notification after 2 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        // Initialize UI when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get existing cart or initialize empty object
+            cart = JSON.parse(localStorage.getItem('cart')) || {};
+            
+            // Update UI for each item in cart
+            for (const itemId in cart) {
+                const item = cart[itemId];
+                updateButtonUI(itemId, item.name, item.price);
+            }
+            
+            // Update cart badge
+            updateCartBadge();
+        });
+    </script>
+</body>
+</html>
